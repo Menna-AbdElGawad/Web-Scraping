@@ -1,8 +1,5 @@
 from scraper import GazaScraper
-from save_data import save_csv
-
-print("Welcome to Gaza News!")
-print("---------------------")
+from datetime import datetime
 
 def display_menu(language="en"):
     if language == "en":
@@ -21,6 +18,8 @@ def display_menu(language="en"):
         print("5. خروج")
 
 def main():
+    scraper = GazaScraper()
+
     print("Choose Language / اختر اللغة:")
     print("1. English")
     print("2. اللغة العربية")
@@ -32,7 +31,7 @@ def main():
     elif choice == "2":
         language = "ar"
     else:
-        print("Invalid Choice! Defaulting to English.")
+        print("Invalid choice! Defaulting to English.")
         language = "en"
 
     while True:
@@ -40,39 +39,61 @@ def main():
         option = input("Enter option: ")
 
         if option == "1":
-            if language == "en":
-                print("Showing latest news...")
-            else:
-                print("عرض آخر الأخبار...")
+            news = scraper.get_latest_news()
+            scraper.save_to_csv(news)
+            for n in news:
+                if n['date']:
+                    date_str = n['date'].strftime('%d/%m/%Y')
+                else:
+                    date_str = 'N/A'
+                print(f"{date_str} - {n['title']} ({n['link']})")
+
         elif option == "2":
-            if language == "en":
-                print("Searching News by Keyword...")
-            else:
-                print("جاري البحث عن الأخبار بالكلمة المفتاحية...")
+            keyword = input("Enter keyword: ")
+            news = scraper.search_key(keyword)
+            for n in news:
+                if n['date']:
+                    date_str = n['date'].strftime('%d/%m/%Y')
+                else:
+                    date_str = 'N/A'
+                print(f"{date_str} - {n['title']}")
+
         elif option == "3":
-            if language == "en":
-                print("Filtering News by Date...")
-            else:
-                print("تصفية الأخبار حسب التاريخ...")
+            date_str = input("Enter date (DD/MM/YYYY): ")
+            try:
+                target_date = datetime.strptime(date_str, "%d/%m/%Y").date()
+            except:
+                print("Invalid date format.")
+                continue
+
+            news = scraper.filter_date(target_date)
+            for n in news:
+                if n['date']:
+                    date_str = n['date'].strftime('%d/%m/%Y')
+                else:
+                    date_str = 'N/A'
+                print(f"{date_str} - {n['title']}")
+
         elif option == "4":
             if language == "en":
                 language = "ar"
-                print("Language switched to Arabic.")
+                print("تم تغيير اللغة.")
             else:
                 language = "en"
-                print("تم تغيير اللغة إلى الإنجليزية.")
+                print("Language switched.")
+
         elif option == "5":
             if language == "en":
                 print("Good Bye!")
             else:
                 print("إلى اللقاء!")
             break
+
         else:
             if language == "en":
-                print("Invalid Choice, please try again.")
+                print("Invalid choice, please try again.")
             else:
                 print("اختيار غير صالح، حاول مرة أخرى.")
 
 if __name__ == "__main__":
     main()
-    scraper = GazaScraper()
