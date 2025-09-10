@@ -16,9 +16,6 @@ Web-Scraping/
 │   ├── Export_CSV.py
 │   ├── requirements.txt
 │   └── README.md
-│
-├── requirements.txt                
-├── .gitignore
 └── README.md                      
 ```
 
