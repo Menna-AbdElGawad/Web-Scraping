@@ -29,10 +29,7 @@ Web-Scraping/
 **Features**: 
 - Search jobs by keyword
 - Multi-page scraping
-- Duplicate removal
 - CSV export
-
-[📖 View Documentation](./Job-Scraping/README.md) | [🔗 Go to Project](./Job-Scraping/)
 
 ---
 
